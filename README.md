@@ -1,73 +1,239 @@
-# Welcome to your Lovable project
+# Retail Sales Management System
 
-## Project info
+A comprehensive full-stack retail sales management dashboard with advanced search, filtering, sorting, and pagination capabilities.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Overview
 
-## How can I edit this code?
+This application provides a clean, professional interface for managing and analyzing retail sales data. Built as part of the TruEstate SDE Intern Assignment, it demonstrates modern web development practices with a focus on user experience and code quality.
 
-There are several ways of editing your application.
+![Dashboard Preview](docs/dashboard-preview.png)
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Frontend
+- **React 18** with TypeScript
+- **Vite** for fast development and optimized builds
+- **Tailwind CSS** with custom design tokens
+- **Radix UI** primitives via shadcn/ui
+- **date-fns** for date formatting
+- **TanStack Query** for data fetching optimization
 
-Changes made via Lovable will be committed automatically to this repo.
+### Backend
+- **Lovable Cloud** (powered by Supabase)
+- **PostgreSQL** database with optimized indexes
+- **REST API** with PostgREST
+- **Row Level Security** for data protection
 
-**Use your preferred IDE**
+## Features
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Search Implementation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+The search functionality provides:
+- **Full-text search** across customer name and phone number
+- **Case-insensitive** matching using PostgreSQL ILIKE
+- **Real-time filtering** as the user types
+- **Combined OR logic** to match either field
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```typescript
+// Example: Searching for "John" matches:
+// - Customer names containing "john", "John", "JOHN"
+// - Phone numbers containing "john"
 ```
 
-**Edit a file directly in GitHub**
+### Filter Implementation
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Multi-select and range-based filters:
 
-**Use GitHub Codespaces**
+| Filter | Type | Description |
+|--------|------|-------------|
+| Customer Region | Multi-select | Filter by geographic region |
+| Gender | Multi-select | Filter by customer gender |
+| Age Range | Range | Numeric min/max filter |
+| Product Category | Multi-select | Filter by product type |
+| Tags | Multi-select | Filter by product tags (array) |
+| Payment Method | Multi-select | Filter by payment type |
+| Date Range | Range | Date start/end filter |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Key Features:**
+- All filters work together (AND logic between filters)
+- Active filter count displayed on each dropdown
+- One-click clear for individual filters
+- Clear all filters button in empty state
 
-## What technologies are used for this project?
+### Sorting Implementation
 
-This project is built with:
+Available sort options:
+- **Date** (Newest First / Oldest First)
+- **Quantity** (High to Low / Low to High)
+- **Customer Name** (A-Z / Z-A)
+- **Amount** (High to Low / Low to High)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+**Behavior:**
+- Click to select a sort field
+- Click again to reverse direction
+- Visual indicator shows current sort direction
 
-## How can I deploy this project?
+### Pagination Implementation
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- **Page size**: 10 records per page
+- **Smart page numbers**: Ellipsis for large datasets
+- **Record count display**: "Showing X to Y of Z results"
+- **Maintains state**: Search, filters, and sort preserved across pages
 
-## Can I connect a custom domain to my Lovable project?
+```typescript
+// Pagination response format
+{
+  page: 1,
+  limit: 10,
+  totalPages: 20,
+  totalRecords: 200
+}
+```
 
-Yes, you can!
+## Project Structure
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```
+root/
+├── docs/
+│   └── architecture.md      # Detailed architecture documentation
+├── public/
+│   ├── favicon.ico
+│   └── robots.txt
+├── src/
+│   ├── components/
+│   │   ├── dashboard/       # Dashboard components
+│   │   └── ui/              # Reusable UI components
+│   ├── hooks/               # Custom React hooks
+│   ├── integrations/        # External service integrations
+│   ├── lib/                 # Utility functions
+│   ├── pages/               # Route pages
+│   ├── types/               # TypeScript interfaces
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css            # Design system tokens
+├── index.html
+├── package.json
+├── tailwind.config.ts
+├── tsconfig.json
+└── README.md
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Setup Instructions
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Local Development
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd retail-sales-management
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open in browser**
+   ```
+   http://localhost:8080
+   ```
+
+### Environment Variables
+
+The application uses Lovable Cloud, which automatically configures:
+- `VITE_SUPABASE_URL` - Database API endpoint
+- `VITE_SUPABASE_PUBLISHABLE_KEY` - API key
+
+No manual configuration required for the hosted version.
+
+## Database Schema
+
+The `sales_data` table stores all retail transaction data:
+
+### Customer Fields
+- CustomerID, CustomerName, PhoneNumber, Gender, Age, CustomerRegion, CustomerType
+
+### Product Fields
+- ProductID, ProductName, Brand, ProductCategory, Tags
+
+### Sales Fields
+- Quantity, PricePerUnit, DiscountPercentage, TotalAmount, FinalAmount
+
+### Operational Fields
+- Date, PaymentMethod, OrderStatus, DeliveryType, StoreID, StoreLocation, SalespersonID, EmployeeName
+
+## API Response Format
+
+```json
+{
+  "data": [
+    {
+      "id": "uuid",
+      "transaction_id": "TXN123456",
+      "date": "2023-09-26",
+      "customer_id": "CUST12016",
+      "customer_name": "Neha Yadav",
+      "phone_number": "+91 9123456789",
+      "gender": "Female",
+      "age": 25,
+      "product_category": "Clothing",
+      "quantity": 1
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "totalPages": 20,
+    "totalRecords": 200
+  }
+}
+```
+
+## Deployment
+
+### Frontend
+The application is deployed on Lovable's hosting platform and automatically updates on code changes.
+
+### Backend
+Lovable Cloud handles all backend infrastructure:
+- Database hosting and management
+- API endpoints
+- Security and authentication
+
+## Edge Cases Handled
+
+- ✅ No results found (with helpful messaging)
+- ✅ Conflicting filters (all applied with AND logic)
+- ✅ Invalid numeric ranges (graceful handling)
+- ✅ Large filter combinations (optimized queries)
+- ✅ Missing optional fields (null-safe rendering)
+- ✅ Network errors (retry functionality)
+- ✅ Loading states (skeleton UI)
+
+## Design Decisions
+
+1. **Component Architecture**: Small, focused components for maintainability
+2. **Custom Hooks**: Data logic separated from UI components
+3. **Design Tokens**: Centralized styling via CSS custom properties
+4. **TypeScript**: Full type safety for reliability
+5. **Optimistic UI**: Skeleton loading for better perceived performance
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## License
+
+MIT License - See LICENSE file for details
