@@ -6,7 +6,7 @@ A comprehensive full-stack retail sales management dashboard with advanced searc
 
 This application provides a clean, professional interface for managing and analyzing retail sales data. Built as part of the TruEstate SDE Intern Assignment, it demonstrates modern web development practices with a focus on user experience and code quality.
 
-![Dashboard Preview](docs/dashboard-preview.png)
+![Dashboard Preview](https://truestate-sales-dash.lovable.app)
 
 ## Tech Stack
 
